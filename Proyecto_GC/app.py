@@ -10,7 +10,7 @@ app.secret_key = 'tu_clave_secreta'
 # Configuración de MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'proyecto_GC'
-app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_PASSWORD'] = 'cosita1225*'
 app.config['MYSQL_DB'] = 'flask_app'
 
 mysql = MySQL(app)
