@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from extensions import mysql, login_manager  # Ya no importa app directamente
+from extensions import mysql, login_manager
 
 class User(UserMixin):
     def __init__(self, id, username, password):
