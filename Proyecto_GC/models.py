@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from app import mysql
+from extensions import mysql, login_manager  # Ya no importa app directamente
 
 class User(UserMixin):
     def __init__(self, id, username, password):
@@ -7,6 +7,7 @@ class User(UserMixin):
         self.username = username
         self.password = password
 
+@login_manager.user_loader
 def load_user(user_id):
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM users WHERE id = %s", (user_id,))
