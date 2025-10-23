@@ -8,11 +8,15 @@
 </head>
 <body class="bg-light">
 <div class="container mt-5">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h1 class="card-title">Bienvenido al Dashboard</h1>
-            <p>Has iniciado sesión como <strong>{{ user.username }}</strong></p>
-            <a href="{{ url_for('logout') }}" class="btn btn-danger">Cerrar sesión</a>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="mb-4">Bienvenido, {{ user.username }}!</h3>
+                    <p>Puedes empezar a explorar tu aplicación.</p>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger mt-3">Cerrar sesión</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
