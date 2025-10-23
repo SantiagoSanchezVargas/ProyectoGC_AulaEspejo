@@ -1,144 +1,126 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-import mysql.connector
-from werkzeug.security import generate_password_hash, check_password_hash
-from functools import wraps
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_mysqldb import MySQL
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin, current_user
 
 app = Flask(__name__)
-app.secret_key = "clave_secreta_para_flash"  # Cambia por algo seguro en producción
+app.secret_key = 'Cosa1234'
 
-DB_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'proyecto_gc',
-    'password': 'cosita1225*',
-    'database': 'proyecto_gc'
-}
+# ------------------ Configuración MySQL ------------------
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'proyecto_gc'
+app.config['MYSQL_PASSWORD'] = 'cosita1225*'
+app.config['MYSQL_DB'] = 'proyecto_gc'
 
-def get_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+mysql = MySQL(app)
+bcrypt = Bcrypt(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
-# =========================
-# Decorador para proteger rutas
-# =========================
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            flash("Debes iniciar sesión", "danger")
-            return redirect(url_for('login_get'))
-        return f(*args, **kwargs)
-    return decorated_function
+#Login User Class
+class User(UserMixin):
+    def __init__(self, id, username, password):
+        self.id = id
+        self.username = username
+        self.password = password
 
-# =========================
-# Registro
-# =========================
-@app.route('/registro', methods=['GET'])
-def registro_get():
-    return render_template('registro.html')
+@login_manager.user_loader
+def load_user(user_id):
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT id, username, password FROM users WHERE id = %s", (user_id,))
+    user = cur.fetchone()
+    cur.close()
+    if user:
+        return User(str(user[0]), user[1], user[2])
+    return None
 
-@app.route('/registro', methods=['POST'])
-def registro_post():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    confirmar = request.form.get('confirm_password')
+# ------------------ Rutas ------------------
 
-    if not username or not password or not confirmar:
-        flash("Todos los campos son obligatorios", "danger")
-        return redirect(url_for('registro_get'))
+@app.route('/')
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    return redirect(url_for('login'))
 
-    if password != confirmar:
-        flash("Las contraseñas no coinciden", "danger")
-        return redirect(url_for('registro_get'))
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username').strip()
+        password = request.form.get('password').strip()
 
-    try:
-        conn = get_connection()
-        cursor = conn.cursor()
+        if not username or not password:
+            flash("Usuario y contraseña son obligatorios", "danger")
+            return render_template('register.html')
 
-        # Verificar si el username ya existe
-        cursor.execute("SELECT id FROM users WHERE username=%s LIMIT 1", (username,))
-        if cursor.fetchone():
-            flash("El usuario ya está registrado", "danger")
-            return redirect(url_for('registro_get'))
+        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        # Guardar usuario con contraseña hasheada
-        hashed = generate_password_hash(password)
-        cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed))
-        conn.commit()
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    username VARCHAR(50) UNIQUE NOT NULL,
+                    password VARCHAR(255) NOT NULL
+                )
+            """)
+            cur.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, hashed_password))
+            mysql.connection.commit()
+            flash("Usuario registrado exitosamente", "success")
+            return redirect(url_for('login'))
+        except Exception as e:
+            flash(f"Error al registrar usuario: {str(e)}", "danger")
+        finally:
+            cur.close()
+    return render_template('register.html')
 
-        flash("Usuario registrado exitosamente. Ahora puedes iniciar sesión.", "success")
-        return redirect(url_for('login_get'))
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username').strip()
+        password = request.form.get('password').strip()
 
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conn' in locals() and conn.is_connected():
-            conn.close()
+        try:
+            cur = mysql.connection.cursor()
+            cur.execute("SELECT id, username, password FROM users WHERE username = %s", (username,))
+            user = cur.fetchone()
+        except Exception as e:
+            flash(f"Error de base de datos: {str(e)}", "danger")
+            return render_template('login.html')
+        finally:
+            cur.close()
 
-# =========================
-# Login
-# =========================
-@app.route('/login', methods=['GET'])
-def login_get():
-    return render_template('login.html')
-
-@app.route('/login', methods=['POST'])
-def login_post():
-    username = request.form.get('username')
-    password = request.form.get('password')
-
-    if not username or not password:
-        flash("Faltan usuario o contraseña", "danger")
-        return redirect(url_for('login_get'))
-
-    try:
-        conn = get_connection()
-        cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT id, username, password FROM users WHERE username=%s LIMIT 1", (username,))
-        user = cursor.fetchone()
-
-        if user and check_password_hash(user['password'], password):
-            # Login exitoso → guardar sesión
-            session['user_id'] = user['id']
-            session['user_username'] = user['username']
+        if user and bcrypt.check_password_hash(user[2], password):
+            u = User(str(user[0]), user[1], user[2])
+            login_user(u)
             return redirect(url_for('dashboard'))
         else:
-            flash("Credenciales inválidas", "danger")
-            return redirect(url_for('login_get'))
+            flash("Usuario o contraseña incorrecta", "danger")
 
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conn' in locals() and conn.is_connected():
-            conn.close()
+    return render_template('login.html')
 
-# =========================
-# Dashboard protegido
-# =========================
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    user = {'username': session['user_username']}
-    return render_template('dashboard.html', user=user)
+    return render_template('dashboard.html', user=current_user)
 
-# =========================
-# Logout
-# =========================
 @app.route('/logout')
 @login_required
 def logout():
-    session.clear()
+    logout_user()
     flash("Has cerrado sesión correctamente", "success")
-    return redirect(url_for('login_get'))
+    return redirect(url_for('login'))
 
-# =========================
-# Ruta inicial
-# =========================
-@app.route('/')
-def index():
-    return redirect(url_for('login_get'))
 
-# =========================
-# Ejecutar App
-# =========================
-if __name__ == "__main__":
+@app.route("/test-db")
+def test_db():
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT 1")
+        cur.close()
+        return "Conexión exitosa a la base de datos!"
+    except Exception as e:
+        return f"Error de conexión: {str(e)}"
+
+
+if __name__ == '__main__':
     app.run(debug=True)
