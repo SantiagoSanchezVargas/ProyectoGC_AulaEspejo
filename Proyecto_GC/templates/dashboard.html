@@ -1,25 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>Dashboard - Vino de Guayaba</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body class="bg-light">
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <h3 class="mb-4">Bienvenido, {{ user.username }}!</h3>
-                    <p>Puedes empezar a explorar tu aplicación.</p>
-                    <a href="{{ url_for('logout') }}" class="btn btn-danger mt-3">Cerrar sesión</a>
-                </div>
-            </div>
-        </div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">🍈 GuayabaPredict</a>
+    <div>
+      <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
     </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+
+      <!-- Tarjeta descriptiva -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+          <h3 class="text-center text-success mb-3 fw-semibold">Sistema de Evaluación de Guayabas</h3>
+          <p class="text-secondary text-center">
+            Analiza la calidad de las guayabas para determinar su aptitud en la producción de vino artesanal.
+          </p>
+          <div class="d-flex justify-content-center mt-3">
+            <img src="{{ url_for('static', filename='guayaba_banner.jpg') }}" alt="Guayabas" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de acciones -->
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+              <h5 class="fw-semibold mb-2">📦 Análisis de muestras</h5>
+              <p class="text-muted small">
+                Sube tus datos o imágenes de guayabas para evaluar su calidad.
+              </p>
+              <a href="#" class="btn btn-success w-100">Cargar muestra</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+              <h5 class="fw-semibold mb-2">🤖 Predicción automática</h5>
+              <p class="text-muted small">
+                Ejecuta el modelo de predicción para determinar si una guayaba es apta para el vino.
+              </p>
+              <a href="#" class="btn btn-outline-success w-100">Ir a predicción</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
+
+<footer class="text-center text-muted py-3 mt-5">
+  <small>© 2025 Proyecto GC - Vino de Guayaba</small>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
