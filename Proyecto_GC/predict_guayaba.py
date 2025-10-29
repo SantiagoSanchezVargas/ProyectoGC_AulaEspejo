@@ -1,0 +1,29 @@
+# predict_guayaba.py
+import numpy as np
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing import image
+
+# Cargar modelo entrenado
+MODEL_PATH = 'ml_model_guayaba.h5'
+model = load_model(MODEL_PATH)
+
+# Diccionario para interpretar la predicción
+class_labels = {0: 'No apta', 1: 'Apta'}
+
+def predict_guayaba(img_path):
+    """
+    img_path: ruta de la imagen a predecir
+    retorna: 'Apta' o 'No apta'
+    """
+    # Cargar imagen y cambiar tamaño
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_array = image.img_to_array(img)
+    img_array = img_array / 255.0  # Normalizar
+    img_array = np.expand_dims(img_array, axis=0)  # Añadir batch dimension
+
+    # Hacer predicción
+    pred = model.predict(img_array)[0][0]
+    
+    # Clasificar según umbral 0.5
+    label = 1 if pred >= 0.5 else 0
+    return class_labels[label], float(pred)

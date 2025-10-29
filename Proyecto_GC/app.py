@@ -54,12 +54,35 @@ def register():
 def dashboard():
     return render_template('dashboard.html')
 
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash('Has cerrado sesión correctamente.', 'info')
     return redirect(url_for('login'))
+
+@app.route('/prediccion', methods=['GET', 'POST'])
+@login_required
+def prediccion():
+    resultado = None
+    if request.method == 'POST':
+        if 'imagen' not in request.files:
+            flash('No se seleccionó ninguna imagen', 'danger')
+        else:
+            imagen = request.files['imagen']
+            if imagen.filename == '':
+                flash('No se seleccionó ninguna imagen', 'danger')
+            else:
+                # Guardar temporalmente la imagen
+                ruta_temporal = f"static/uploads/{imagen.filename}"
+                imagen.save(ruta_temporal)
+                
+                # Aquí llamamos a la función del ML_Model para predecir
+                resultado = predecir_guayaba(ruta_temporal)  # función que definimos en ML_model.py
+
+    return render_template('prediccion.html', resultado=resultado)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

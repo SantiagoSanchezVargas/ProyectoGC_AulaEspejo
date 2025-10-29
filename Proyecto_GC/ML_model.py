@@ -2,7 +2,6 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-# --- Preparación de datos ---
 train_datagen = ImageDataGenerator(
     rescale=1./255,
     rotation_range=20,
@@ -20,7 +19,7 @@ train_generator = train_datagen.flow_from_directory(
 )
 
 val_generator = train_datagen.flow_from_directory(
-    'dataset_guayabas',
+    'Proyecto_GC/Imagenes Guayabas (2)/Imagenes Guayabas',
     target_size=(224, 224),
     batch_size=32,
     class_mode='binary',
