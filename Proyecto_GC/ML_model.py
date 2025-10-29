@@ -17,7 +17,7 @@ def cargar_imagenes(carpeta):
             y.append(etiqueta)
     return np.array(X), np.array(y)
 
-X, y = cargar_imagenes('Imagenes Guayabas')
+X, y = cargar_imagenes('Proyecto_GC/Imagenes Guayabas (2)/Imagenes Guayabas')
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 modelo = RandomForestClassifier()
