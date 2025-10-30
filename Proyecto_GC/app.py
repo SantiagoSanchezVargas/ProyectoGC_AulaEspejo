@@ -77,6 +77,8 @@ def logout():
 @login_required
 def prediccion():
     resultado = None
+    probabilidad = None  # 👈 se inicializa aquí
+
     if request.method == 'POST':
         if 'imagen' not in request.files:
             flash('No se seleccionó ninguna imagen', 'danger')
@@ -85,13 +87,11 @@ def prediccion():
             if imagen.filename == '':
                 flash('No se seleccionó ninguna imagen', 'danger')
             else:
-                # Guardar imagen temporalmente
                 ruta_temporal = os.path.join(UPLOAD_FOLDER, imagen.filename)
                 imagen.save(ruta_temporal)
                 
-                # Llamar a la función de predicción
+                # La función retorna (resultado, probabilidad)
                 resultado, probabilidad = predict_guayaba(ruta_temporal)
-
 
     return render_template('prediccion.html', resultado=resultado, probabilidad=probabilidad)
 
