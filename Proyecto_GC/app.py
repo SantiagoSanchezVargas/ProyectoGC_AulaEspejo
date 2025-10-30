@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysqldb import MySQL
-from flask_login import LoginManager, login_user, logout_user, login_required
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import User, load_user, register_user, get_user_by_username
+from predict_guayaba import predict_guayaba  # Importa tu función de predicción
+
+import os
 
 app = Flask(__name__)
 app.secret_key = "tu_clave_secreta"
 
-# Config MySQL
+# Configuración MySQL
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'proyecto_gc'
 app.config['MYSQL_PASSWORD'] = 'TU_PASSWORD'
@@ -22,7 +25,16 @@ login_manager.login_view = 'login'
 def user_loader_callback(user_id):
     return load_user(user_id, mysql)
 
-# Rutas
+# Asegurarse de que exista carpeta para uploads
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ----------------- RUTAS -----------------
+
+@app.route('/')
+def home():
+    return redirect(url_for('login'))
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -54,7 +66,6 @@ def register():
 def dashboard():
     return render_template('dashboard.html')
 
-
 @app.route('/logout')
 @login_required
 def logout():
@@ -74,15 +85,15 @@ def prediccion():
             if imagen.filename == '':
                 flash('No se seleccionó ninguna imagen', 'danger')
             else:
-                # Guardar temporalmente la imagen
-                ruta_temporal = f"static/uploads/{imagen.filename}"
+                # Guardar imagen temporalmente
+                ruta_temporal = os.path.join(UPLOAD_FOLDER, imagen.filename)
                 imagen.save(ruta_temporal)
                 
-                # Aquí llamamos a la función del ML_Model para predecir
-                resultado = predecir_guayaba(ruta_temporal)  # función que definimos en ML_model.py
+                # Llamar a la función de predicción
+                resultado = predict_guayaba(ruta_temporal)
 
     return render_template('prediccion.html', resultado=resultado)
 
-
+# ----------------- RUN -----------------
 if __name__ == '__main__':
     app.run(debug=True)
