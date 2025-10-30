@@ -90,9 +90,11 @@ def prediccion():
                 imagen.save(ruta_temporal)
                 
                 # Llamar a la función de predicción
-                resultado = predict_guayaba(ruta_temporal)
+                resultado, probabilidad = predict_guayaba(ruta_temporal)
 
-    return render_template('prediccion.html', resultado=resultado)
+
+    return render_template('prediccion.html', resultado=resultado, probabilidad=probabilidad)
+
 
 # ----------------- RUN -----------------
 if __name__ == '__main__':
