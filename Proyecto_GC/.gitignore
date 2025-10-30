@@ -1,2 +1,27 @@
+# Archivos de Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Modelos de Machine Learning
+*.h5
+*.pkl
+*.joblib
+
+# Entornos virtuales
+venv/
+env/
+
+# Configuraciones locales
+*.env
+instance/
+.env
+
+# Archivos temporales o de ejecución
+*.log
+*.sqlite3
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
