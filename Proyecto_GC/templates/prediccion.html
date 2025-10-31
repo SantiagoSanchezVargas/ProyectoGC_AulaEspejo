@@ -35,6 +35,14 @@
         .btn-success:hover {
             background-color: #15803d;
         }
+        .btn-outline-success {
+            border-color: #16a34a;
+            color: #16a34a;
+        }
+        .btn-outline-success:hover {
+            background-color: #16a34a;
+            color: white;
+        }
         #video {
             width: 100%;
             border-radius: 10px;
@@ -53,6 +61,10 @@
         .no-apt {
             background-color: #fee2e2;
             color: #991b1b;
+        }
+        .no-guayaba {
+            background-color: #fef3c7;
+            color: #92400e;
         }
     </style>
 </head>
@@ -77,9 +89,14 @@
                 </form>
 
                 {% if resultado %}
-                <div class="result-card {% if resultado == 'Apta' %}apt{% else %}no-apt{% endif %}">
+                <div class="result-card
+                    {% if resultado == 'Apta' %}apt
+                    {% elif resultado == 'No apta' %}no-apt
+                    {% else %}no-guayaba{% endif %}">
                     <h4 class="fw-bold">Resultado: {{ resultado }}</h4>
+                    {% if resultado != "No hay guayaba" %}
                     <p class="mb-0">Confianza: {{ "%.2f"|format(probabilidad * 100) }}%</p>
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>

@@ -77,7 +77,7 @@ def logout():
 @login_required
 def prediccion():
     resultado = None
-    probabilidad = None  # 👈 se inicializa aquí
+    probabilidad = None
 
     if request.method == 'POST':
         if 'imagen' not in request.files:
@@ -93,7 +93,11 @@ def prediccion():
                 # La función retorna (resultado, probabilidad)
                 resultado, probabilidad = predict_guayaba(ruta_temporal)
 
-    return render_template('prediccion.html', resultado=resultado, probabilidad=probabilidad)
+    return render_template(
+        'prediccion.html',
+        resultado=resultado,
+        probabilidad=probabilidad
+    )
 
 
 # ----------------- RUN -----------------
