@@ -1,40 +1,50 @@
-# predict_guayaba.py
-import numpy as np
-from tensorflow.keras.models import load_model
+import tensorflow as tf
 from tensorflow.keras.preprocessing import image
+import numpy as np
+import os
 
-# Cargar modelo entrenado
-MODEL_PATH = 'ml_model_guayaba.h5'
-model = load_model(MODEL_PATH)
+# =============================
+# CARGA DEL MODELO
+# =============================
+MODEL_PATH = "Proyecto_GC/ml_model_guayaba.h5"
+if not os.path.exists(MODEL_PATH):
+    raise FileNotFoundError(f"No se encontró el modelo en: {MODEL_PATH}")
 
-# Diccionario para interpretar la predicción
-class_labels = {0: 'No apta', 1: 'Apta'}
+model = tf.keras.models.load_model(MODEL_PATH)
+print("✅ Modelo cargado correctamente.")
 
+# Diccionario de clases (ajusta según tu estructura)
+CLASSES = ['Apta', 'No apta']
+
+# =============================
+# FUNCIÓN DE PREDICCIÓN
+# =============================
 def predict_guayaba(img_path):
-    """
-    img_path: ruta de la imagen a predecir
-    retorna: (resultado, probabilidad)
-    """
-    # Cargar imagen y cambiar tamaño
+    if not os.path.exists(img_path):
+        raise FileNotFoundError(f"No se encontró la imagen en: {img_path}")
+
+    # Preprocesamiento
     img = image.load_img(img_path, target_size=(224, 224))
-    img_array = image.img_to_array(img)
-    img_array = img_array / 255.0  # Normalizar
-    img_array = np.expand_dims(img_array, axis=0)  # Añadir batch dimension
+    img_array = image.img_to_array(img) / 255.0
+    img_array = np.expand_dims(img_array, axis=0)
 
-    # Hacer predicción
-    pred = model.predict(img_array)[0][0]
+    # Predicción
+    preds = model.predict(img_array)
+    class_idx = np.argmax(preds)
+    confidence = float(np.max(preds))
 
-    # Clasificar según umbral 0.5
-    label = 1 if pred >= 0.5 else 0
+    label = CLASSES[class_idx]
+    print(f"[DEBUG] Predicciones: {preds}")
+    print(f"Resultado: {label}")
+    print(f"Confianza: {confidence * 100:.2f}%")
+    return label, confidence
 
-    # DEBUG: imprimir detalles
-    print(f"[DEBUG] Predicción bruta: {pred}, etiqueta: {label}, confianza: {pred:.4f}")
 
-    return class_labels[label], float(pred)
-
-# --- Para prueba rápida ---
+# =============================
+# PRUEBA LOCAL
+# =============================
 if __name__ == "__main__":
-    img_path = "ruta/a/una_imagen_cualquiera.jpg"  # Cambia esta ruta
-    resultado, probabilidad = predict_guayaba(img_path)
-    print(f"Resultado: {resultado}")
-    print(f"Confianza: {probabilidad * 100:.2f}%")
+    # Cambia esta ruta a la imagen que quieras probar
+    img_path = "C:/Users/Admin/Documents/GitHub/ProyectoGC_AulaEspejo/static/uploads/captura_guayaba.jpg"
+    label, confidence = predict_guayaba(img_path)
+    print(f"\n📊 Resultado final: {label} ({confidence * 100:.2f}%)")

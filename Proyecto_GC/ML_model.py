@@ -1,63 +1,83 @@
-# ML_model_guayaba_v2.py
+import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications import MobileNetV2
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras import layers, models, optimizers
+import os
 
-
-DATASET_PATH = 'Proyecto_GC/Imagenes'
+# =============================
+# CONFIGURACIÓN BÁSICA
+# =============================
+BASE_DIR = "Proyecto_GC/Imagenes Guayabas"
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 10
+EPOCHS = 15  # puedes ajustar
 
-
+# =============================
+# PREPROCESAMIENTO Y AUGMENTACIÓN
+# =============================
 datagen = ImageDataGenerator(
     rescale=1./255,
-    validation_split=0.2,
     rotation_range=25,
-    zoom_range=0.25,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
     horizontal_flip=True,
-    brightness_range=[0.7, 1.3]
+    brightness_range=[0.8, 1.2],
+    validation_split=0.2
 )
 
-train_generator = datagen.flow_from_directory(
-    DATASET_PATH,
+train_data = datagen.flow_from_directory(
+    BASE_DIR,
     target_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
-    class_mode='binary',
+    class_mode='categorical',
     subset='training'
 )
 
-val_generator = datagen.flow_from_directory(
-    DATASET_PATH,
+val_data = datagen.flow_from_directory(
+    BASE_DIR,
     target_size=IMG_SIZE,
     batch_size=BATCH_SIZE,
-    class_mode='binary',
+    class_mode='categorical',
     subset='validation'
 )
 
+print("\n📁 Clases detectadas:", train_data.class_indices)
 
+# =============================
+# MODELO
+# =============================
 base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
-base_model.trainable = False  
+base_model.trainable = False
 
-x = base_model.output
-x = GlobalAveragePooling2D()(x)
-x = Dense(128, activation='relu')(x)
-x = Dropout(0.3)(x)
-preds = Dense(1, activation='sigmoid')(x)
+model = models.Sequential([
+    base_model,
+    layers.GlobalAveragePooling2D(),
+    layers.Dense(128, activation='relu'),
+    layers.Dropout(0.3),
+    layers.Dense(2, activation='softmax')  # solo dos clases
+])
 
-model = Model(inputs=base_model.input, outputs=preds)
-
-model.compile(optimizer=Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
-
-
-history = model.fit(
-    train_generator,
-    validation_data=val_generator,
-    epochs=EPOCHS
+model.compile(
+    optimizer=optimizers.Adam(learning_rate=1e-4),
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
 )
 
+# =============================
+# ENTRENAMIENTO
+# =============================
+history = model.fit(
+    train_data,
+    epochs=EPOCHS,
+    validation_data=val_data
+)
 
-model.save('ml_model_guayaba.h5')
-print("✅ Modelo mejorado guardado como ml_model_guayaba_v2.h5")
+# =============================
+# GUARDAR MODELO
+# =============================
+os.makedirs("Proyecto_GC", exist_ok=True)
+model.save("Proyecto_GC/ml_model_guayaba.h5")
+
+print("\n✅ Modelo entrenado y guardado correctamente.")
