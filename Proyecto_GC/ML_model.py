@@ -59,5 +59,5 @@ history = model.fit(
 )
 
 
-model.save('ml_model_guayaba_v2.h5')
+model.save('ml_model_guayaba.h5')
 print("✅ Modelo mejorado guardado como ml_model_guayaba_v2.h5")

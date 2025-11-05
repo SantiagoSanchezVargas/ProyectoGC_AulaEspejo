@@ -3,99 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predicción de Guayaba 🍈</title>
+    <title>Clasificación de Guayaba 🍈</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <style>
         body {
-            background: linear-gradient(135deg, #e6f4ea, #ffffff);
+            background: linear-gradient(135deg, #e8f5e9, #ffffff);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', sans-serif;
         }
-        .card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        .card-header {
-            background-color: #16a34a;
-            color: white;
-            text-align: center;
-            padding: 1.2rem;
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-        .btn-success {
-            background-color: #16a34a;
-            border: none;
-        }
-        .btn-success:hover {
-            background-color: #15803d;
-        }
-        .btn-outline-success {
-            border-color: #16a34a;
-            color: #16a34a;
-        }
-        .btn-outline-success:hover {
-            background-color: #16a34a;
-            color: white;
-        }
-        #video {
+        video {
             width: 100%;
-            border-radius: 10px;
+            border-radius: .75rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 1rem;
-        }
-        .result-card {
-            border-radius: 12px;
-            text-align: center;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        .apt {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-        .no-apt {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-        .no-guayaba {
-            background-color: #fef3c7;
-            color: #92400e;
         }
     </style>
 </head>
 <body>
-    <div class="container px-3">
-        <div class="card w-100" style="max-width: 550px; margin: auto;">
-            <div class="card-header">Clasificación de Guayaba 🍈</div>
-            <div class="card-body">
+    <div class="container py-5">
+        <div class="card shadow-lg border-0 rounded-4 mx-auto" style="max-width: 550px;">
+            <div class="card-header text-white bg-success text-center py-3 rounded-top-4">
+                <h4 class="mb-0 fw-semibold">Clasificación de Guayaba 🍈</h4>
+            </div>
+            <div class="card-body p-4">
                 <form action="{{ url_for('prediccion') }}" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3 text-center">
+                    <div class="mb-4 text-center">
                         <video id="video" autoplay></video>
                         <canvas id="canvas" style="display:none;"></canvas>
 
-                        <input type="file" name="imagen" accept="image/*" class="form-control mb-3">
-                        <button type="button" id="captureBtn" class="btn btn-outline-success w-100 mb-3">
+                        <input type="file" name="imagen" accept="image/*" class="form-control mb-3 shadow-sm">
+                        <button type="button" id="captureBtn" class="btn btn-outline-success w-100">
                             📸 Capturar con cámara
                         </button>
                     </div>
-                    <button type="submit" class="btn btn-success w-100">
+
+                    <button type="submit" class="btn btn-success w-100 shadow-sm">
                         🔍 Analizar Guayaba
                     </button>
                 </form>
 
                 {% if resultado %}
-                <div class="result-card
-                    {% if resultado == 'Apta' %}apt
-                    {% elif resultado == 'No apta' %}no-apt
-                    {% else %}no-guayaba{% endif %}">
-                    <h4 class="fw-bold">Resultado: {{ resultado }}</h4>
+                <div class="alert mt-4 {% if resultado == 'Apta' %}alert-success{% elif resultado == 'No apta' %}alert-danger{% else %}alert-warning{% endif %} text-center rounded-3 shadow-sm">
+                    <h5 class="fw-bold mb-1">Resultado: {{ resultado }}</h5>
                     {% if resultado != "No hay guayaba" %}
-                    <p class="mb-0">Confianza: {{ "%.2f"|format(probabilidad * 100) }}%</p>
+                    <small>Confianza: {{ "%.2f"|format(probabilidad * 100) }}%</small>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -113,7 +67,7 @@
             .then(stream => video.srcObject = stream)
             .catch(err => console.error("Error al acceder a la cámara:", err));
 
-        // Capturar imagen de la cámara y simular archivo
+        // Capturar imagen de la cámara
         captureBtn.addEventListener('click', () => {
             const ctx = canvas.getContext('2d');
             canvas.width = video.videoWidth;
