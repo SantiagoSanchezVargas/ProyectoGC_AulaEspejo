@@ -78,25 +78,30 @@ def logout():
 def prediccion():
     resultado = None
     probabilidad = None
+    image_path = None
 
     if request.method == 'POST':
-        if 'imagen' not in request.files:
+        # Acepta tanto "imagen" (vieja versión) como "file" (nueva)
+        imagen = request.files.get('imagen') or request.files.get('file')
+
+        if not imagen or imagen.filename == '':
             flash('No se seleccionó ninguna imagen', 'danger')
         else:
-            imagen = request.files['imagen']
-            if imagen.filename == '':
-                flash('No se seleccionó ninguna imagen', 'danger')
-            else:
-                ruta_temporal = os.path.join(UPLOAD_FOLDER, imagen.filename)
-                imagen.save(ruta_temporal)
-                
-                # La función retorna (resultado, probabilidad)
-                resultado, probabilidad = predict_guayaba(ruta_temporal)
+            # Guardar temporalmente la imagen subida o capturada
+            ruta_temporal = os.path.join(UPLOAD_FOLDER, imagen.filename)
+            imagen.save(ruta_temporal)
+
+            # Ejecutar predicción
+            resultado, probabilidad = predict_guayaba(ruta_temporal)
+
+            # Generar ruta relativa para mostrar en la vista
+            image_path = url_for('static', filename=f'uploads/{imagen.filename}')
 
     return render_template(
         'prediccion.html',
-        resultado=resultado,
-        probabilidad=probabilidad
+        label=resultado,
+        confidence=probabilidad,
+        image_path=image_path
     )
 
 
