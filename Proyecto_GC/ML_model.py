@@ -7,7 +7,7 @@ import os
 # =============================
 # CONFIGURACIÓN BÁSICA
 # =============================
-BASE_DIR = "Proyecto_GC/Imagenes Guayabas"
+BASE_DIR = "Proyecto_GC/Imagenes"
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 EPOCHS = 15  # puedes ajustar
