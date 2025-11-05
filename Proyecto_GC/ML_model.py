@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.optimizers import Adam
 
 
-DATASET_PATH = 'Proyecto_GC/Imagenes Guayabas (2)/Imagenes Guayabas'
+DATASET_PATH = 'Proyecto_GC/Imagenes'
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 32
 EPOCHS = 10
