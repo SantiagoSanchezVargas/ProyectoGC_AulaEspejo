@@ -6,7 +6,7 @@ from predict_guayaba import predict_guayaba  # Importa tu función de predicció
 
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static_HTML', template_folder='templates')
 app.secret_key = "tu_clave_secreta"
 
 # Configuración MySQL
@@ -26,7 +26,7 @@ def user_loader_callback(user_id):
     return load_user(user_id, mysql)
 
 # Asegurarse de que exista carpeta para uploads
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
+UPLOAD_FOLDER = os.path.join('static_HTML', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ----------------- RUTAS -----------------
