@@ -73,37 +73,31 @@ def logout():
     flash('Has cerrado sesión correctamente.', 'info')
     return redirect(url_for('login'))
 
+
 @app.route('/prediccion', methods=['GET', 'POST'])
 @login_required
 def prediccion():
-    resultado = None
-    probabilidad = None
+    label = None
+    confidence = None
     image_path = None
 
     if request.method == 'POST':
-        # Acepta tanto "imagen" (vieja versión) como "file" (nueva)
-        imagen = request.files.get('imagen') or request.files.get('file')
-
+        imagen = request.files.get('file')
         if not imagen or imagen.filename == '':
             flash('No se seleccionó ninguna imagen', 'danger')
         else:
-            # Guardar temporalmente la imagen subida o capturada
             ruta_temporal = os.path.join(UPLOAD_FOLDER, imagen.filename)
             imagen.save(ruta_temporal)
 
-            # Ejecutar predicción
-            resultado, probabilidad = predict_guayaba(ruta_temporal)
-
-            # Generar ruta relativa para mostrar en la vista
+            label, confidence = predict_guayaba(ruta_temporal)
             image_path = url_for('static', filename=f'uploads/{imagen.filename}')
 
     return render_template(
         'prediccion.html',
-        label=resultado,
-        confidence=probabilidad,
+        label=label,
+        confidence=confidence,
         image_path=image_path
     )
-
 
 # ----------------- RUN -----------------
 if __name__ == '__main__':
