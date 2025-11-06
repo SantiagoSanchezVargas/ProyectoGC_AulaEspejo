@@ -1,50 +1,39 @@
+# Proyecto_GC/predict_guayaba.py
 import tensorflow as tf
+from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import numpy as np
 import os
 
-# =============================
-# CARGA DEL MODELO
-# =============================
-MODEL_PATH = "Proyecto_GC/ml_model_guayaba.h5"
-if not os.path.exists(MODEL_PATH):
-    raise FileNotFoundError(f"No se encontró el modelo en: {MODEL_PATH}")
+# --- Cargar modelo ---
+MODEL_PATH = 'ml_model_guayaba_v2.h5'
+model = load_model(MODEL_PATH)
 
-model = tf.keras.models.load_model(MODEL_PATH)
-print("✅ Modelo cargado correctamente.")
-
-# Diccionario de clases (ajusta según tu estructura)
-CLASSES = ['Apta', 'No apta']
-
-# =============================
-# FUNCIÓN DE PREDICCIÓN
-# =============================
+# --- Función de predicción ---
 def predict_guayaba(img_path):
-    if not os.path.exists(img_path):
-        raise FileNotFoundError(f"No se encontró la imagen en: {img_path}")
-
-    # Preprocesamiento
+    """
+    Recibe la ruta de una imagen, la procesa y devuelve:
+    - resultado: 'Apta' o 'No apta'
+    - confianza: probabilidad de la clase predicha
+    """
+    # Cargar y redimensionar imagen
     img = image.load_img(img_path, target_size=(224, 224))
-    img_array = image.img_to_array(img) / 255.0
-    img_array = np.expand_dims(img_array, axis=0)
+    img_array = image.img_to_array(img)
+    img_array = img_array / 255.0            # Normalizar
+    img_array = np.expand_dims(img_array, axis=0)  # Agregar batch
 
     # Predicción
-    preds = model.predict(img_array)
-    class_idx = np.argmax(preds)
-    confidence = float(np.max(preds))
+    pred = model.predict(img_array)[0][0]
 
-    label = CLASSES[class_idx]
-    print(f"[DEBUG] Predicciones: {preds}")
-    print(f"Resultado: {label}")
-    print(f"Confianza: {confidence * 100:.2f}%")
-    return label, confidence
+    # Convertir a etiqueta
+    if pred >= 0.5:
+        resultado = 'Apta'
+        confianza = pred
+    else:
+        resultado = 'No apta'
+        confianza = 1 - pred
 
+    # Debug opcional
+    print(f"[DEBUG] Predicción bruta: {pred}, resultado: {resultado}, confianza: {confianza:.4f}")
 
-# =============================
-# PRUEBA LOCAL
-# =============================
-if __name__ == "__main__":
-    # Cambia esta ruta a la imagen que quieras probar
-    img_path = "C:/Users/Admin/Documents/GitHub/ProyectoGC_AulaEspejo/static/uploads/captura_guayaba.jpg"
-    label, confidence = predict_guayaba(img_path)
-    print(f"\n📊 Resultado final: {label} ({confidence * 100:.2f}%)")
+    return resultado, confianza
