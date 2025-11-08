@@ -26,7 +26,7 @@ def user_loader_callback(user_id):
     return load_user(user_id, mysql)
 
 # Asegurarse de que exista carpeta para uploads
-UPLOAD_FOLDER = os.path.join('static_HTML', 'uploads')
+UPLOAD_FOLDER = os.path.join('static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ----------------- RUTAS -----------------
