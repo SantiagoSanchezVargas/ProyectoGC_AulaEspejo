@@ -18,15 +18,21 @@
       max-width: 350px;
       height: auto;
     }
+    /* Solo afecta al logo del navbar */
+    .navbar-logo {
+      max-width: 120px; /* tamaño ajustable */
+      height: auto;
+    }
   </style>
 </head>
 
 <body class="bg-light">
 
   <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
     <div class="container">
-      <img src="{{ url_for('static', filename='Bravéa-removebg-preview.png') }}" alt="Guayabas">
+      <img src="{{ url_for('static', filename='Bravéa-removebg-preview.png') }}" 
+           alt="Guayabas" class="navbar-logo">
       <a class="navbar-brand fw-bold" href="#">Bravéa</a>
       <div>
         <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-sm">Inicio</a>
@@ -53,14 +59,14 @@
             </div>
           </div>
         </div>
+
         <div class="card border-0 shadow-sm mb-4">
           <div class="card-body">
             <h4 class="text-success fw-semibold mb-3">Descripción del producto</h4>
             <p class="mb-0">
               Brávea es un vino de guayaba enlatado y gasificado, elaborado artesanalmente en Loja, Ecuador.
-              El cual combina un enfoque tradicional con técnicas como la gasificación y enlatado para ofrecer un 
-              toque de frescura, para satisfacer los gustos modernos, enfocados en algo fresco, diferente y fácil de llevar.
-              Perfecto para personas entre los 20 y 55 años que valoran el sabor natural, autenticidad y la conveniencia.
+              Combina un enfoque tradicional con técnicas como la gasificación y enlatado para ofrecer un 
+              toque de frescura, perfecto para personas entre los 20 y 55 años que valoran el sabor natural y la autenticidad.
             </p>
           </div>
         </div>
