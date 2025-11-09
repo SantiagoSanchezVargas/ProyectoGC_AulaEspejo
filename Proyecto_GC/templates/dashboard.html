@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <img src="{{ url_for('static', filename='3.png') }}" alt="Guayabas">
   <title>BRAVÉA – Vino de guayaba enlatado y gasificado</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <style>
     body {
-      background-color: #f4f6f8;
+      background-color: #6d051f;
       font-family: 'Poppins', sans-serif;
     }
     .card {
@@ -24,11 +25,12 @@
 <body class="bg-light">
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-bold" href="#">🍈 Bravéa</a>
       <div>
         <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-sm">Inicio</a>
       </div>
     </div>
   </nav>
