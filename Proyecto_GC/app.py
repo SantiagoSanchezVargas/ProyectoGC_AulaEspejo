@@ -6,7 +6,7 @@ from predict_guayaba import predict_guayaba  # Importa tu función de predicció
 
 import os
 
-app = Flask(__name__, static_folder='static_HTML', template_folder='templates')
+app = Flask(__name__, static_folder='static', template_folder='templates')
 app.secret_key = "tu_clave_secreta"
 
 # Configuración MySQL
