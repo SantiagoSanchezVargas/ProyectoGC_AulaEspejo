@@ -1,39 +1,38 @@
-/* ------------------- BODY ------------------- */
+
 body {
-    background-color: #6d051f; /* Fondo rojo oscuro */
+    background-color: #6d051f; 
     font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    color: #fff; /* Texto por defecto blanco */
+    color: #fff; 
 }
 
-/* ------------------- NAVBAR ------------------- */
+
 .navbar {
-    background-color: #198754; /* Verde oscuro de Bootstrap */
+    background-color: #198754;
 }
 
-/* Logo del navbar */
+
 .navbar-logo {
-    max-width: 80px; /* Ajusta tamaño del logo */
+    max-width: 80px;
     height: auto;
     margin-right: 10px;
 }
 
-/* ------------------- CARDS ------------------- */
+
 .card {
-    border-radius: 16px;   /* Bordes redondeados */
-    border: none;          /* Sin borde */
-    background-color: #fff; /* Fondo blanco para tarjetas */
-    color: #000;            /* Texto negro dentro de cards */
+    border-radius: 16px;  
+    border: none;        
+    background-color: #fff;
+    color: #000;            
     margin-bottom: 1.5rem;
 }
 
-/* ------------------- INPUTS Y BOTONES ------------------- */
 input, button {
     border-radius: 0.5rem;
 }
 
-/* Botones específicos */
+
 .btn-success {
     background-color: #198754;
     border-color: #198754;
@@ -49,22 +48,21 @@ input, button {
     color: #198754;
 }
 
-/* ------------------- IMÁGENES ------------------- */
 img {
     max-width: 120px;
     height: auto;
 }
 
-/* ------------------- TEXTOS ------------------- */
+
 h3, h4, h5 {
-    color: #198754; /* Verde para títulos dentro de cards */
+    color: #198754; 
 }
 
 p, li {
-    color: #333; /* Texto dentro de cards */
+    color: #333;
 }
 
-/* ------------------- FOOTER ------------------- */
+
 footer {
     color: #ccc;
     font-size: 0.9rem;
@@ -72,7 +70,6 @@ footer {
     padding: 1rem 0;
 }
 
-/* ------------------- CONTENEDOR PRINCIPAL ------------------- */
 .container {
     padding-top: 2rem;
     padding-bottom: 2rem;
