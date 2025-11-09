@@ -2,15 +2,30 @@
 body {
     background-color: #6d051f; /* Fondo rojo oscuro */
     font-family: 'Poppins', sans-serif;
-    color: #fff; /* Texto blanco por defecto */
+    margin: 0;
+    padding: 0;
+    color: #fff; /* Texto por defecto blanco */
+}
+
+/* ------------------- NAVBAR ------------------- */
+.navbar {
+    background-color: #198754; /* Verde oscuro de Bootstrap */
+}
+
+/* Logo del navbar */
+.navbar-logo {
+    max-width: 80px; /* Ajusta tamaño del logo */
+    height: auto;
+    margin-right: 10px;
 }
 
 /* ------------------- CARDS ------------------- */
 .card {
-    border-radius: 16px; /* Bordes redondeados */
-    border: none;        /* Sin borde */
-    background-color: #fff; /* Fondo blanco para cards */
-    color: #000;           /* Texto negro dentro de cards */
+    border-radius: 16px;   /* Bordes redondeados */
+    border: none;          /* Sin borde */
+    background-color: #fff; /* Fondo blanco para tarjetas */
+    color: #000;            /* Texto negro dentro de cards */
+    margin-bottom: 1.5rem;
 }
 
 /* ------------------- INPUTS Y BOTONES ------------------- */
@@ -18,40 +33,7 @@ input, button {
     border-radius: 0.5rem;
 }
 
-/* ------------------- IMÁGENES ------------------- */
-img {
-    max-width: 350px; /* Tamaño máximo general */
-    height: auto;
-}
-
-/* Logo del navbar */
-.navbar-logo {
-    max-width: 80px; /* Ajusta el tamaño del logo */
-    height: auto;
-    margin-right: 10px; /* Espacio entre logo y nombre */
-}
-
-/* ------------------- NAVBAR ------------------- */
-.navbar {
-    background-color: #198754; /* Verde de bootstrap darken si quieres */
-}
-
-/* ------------------- FOOTER ------------------- */
-footer {
-    color: #ccc;
-    font-size: 0.9rem;
-}
-
-/* ------------------- TEXTOS ------------------- */
-h3, h4, h5 {
-    color: #198754; /* Verde para títulos dentro de cards */
-}
-
-p, li {
-    color: #333; /* Texto dentro de cards */
-}
-
-/* ------------------- BOTONES ------------------- */
+/* Botones específicos */
 .btn-success {
     background-color: #198754;
     border-color: #198754;
@@ -65,4 +47,33 @@ p, li {
 .btn-outline-light:hover {
     background-color: #fff;
     color: #198754;
+}
+
+/* ------------------- IMÁGENES ------------------- */
+img {
+    max-width: 120px;
+    height: auto;
+}
+
+/* ------------------- TEXTOS ------------------- */
+h3, h4, h5 {
+    color: #198754; /* Verde para títulos dentro de cards */
+}
+
+p, li {
+    color: #333; /* Texto dentro de cards */
+}
+
+/* ------------------- FOOTER ------------------- */
+footer {
+    color: #ccc;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+/* ------------------- CONTENEDOR PRINCIPAL ------------------- */
+.container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
