@@ -5,35 +5,14 @@
   <title>BRAVÉA – Vino de guayaba enlatado y gasificado</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    body {
-      background-color: #6d051f;
-      font-family: 'Poppins', sans-serif;
-    }
-    .card {
-      border-radius: 16px;
-      border: none;
-    }
-    img {
-      max-width: 350px;
-      height: auto;
-    }
-    /* Solo afecta al logo del navbar */
-    .navbar-logo {
-      max-width: 80px; /* tamaño ajustable */
-      height: auto;
-    }
-  </style>
 </head>
 
 <body class="bg-light">
 
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
+    <img src="{{ url_for('static', filename='Bravéa-removebg-preview.png') }}" alt="Guayabas">
     <div class="container">
-      <img src="{{ url_for('static', filename='Bravéa-removebg-preview.png') }}" 
-           alt="Guayabas" class="navbar-logo">
-      <a class="navbar-brand fw-bold" href="#">Bravéa</a>
+      <a class="navbar-brand fw-bold" href="#">🍈 Bravéa</a>
       <div>
         <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-sm">Inicio</a>
         <a href="{{ url_for('quienes_somos') }}" class="btn btn-outline-light btn-sm">Quienes Somos</a>
