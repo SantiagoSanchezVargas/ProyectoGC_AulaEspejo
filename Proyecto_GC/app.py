@@ -66,6 +66,11 @@ def register():
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/quienessomos')
+@login_required
+def dashboard():
+    return render_template('MisionVision.html')
+
 @app.route('/logout')
 @login_required
 def logout():
