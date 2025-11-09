@@ -68,8 +68,9 @@ def dashboard():
 
 @app.route('/quienessomos')
 @login_required
-def dashboard():
+def quienes_somos():
     return render_template('MisionVision.html')
+
 
 @app.route('/logout')
 @login_required
