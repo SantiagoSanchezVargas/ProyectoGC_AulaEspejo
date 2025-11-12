@@ -1,12 +1,10 @@
-Flask>=2.0
+Flask
 Flask-MySQLdb
 Flask-Login
 Flask-Bcrypt
-mysql-connector-python
-mysqlclient
+gunicorn
+opencv-python
 tensorflow
+scikit-learn
 pillow
 numpy
-scikit-learn
-opencv-python
-gunicorn

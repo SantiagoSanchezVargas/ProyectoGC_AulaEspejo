@@ -10,10 +10,11 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 app.secret_key = "tu_clave_secreta"
 
 # Configuración MySQL
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'proyecto_gc'
-app.config['MYSQL_PASSWORD'] = 'TU_PASSWORD'
-app.config['MYSQL_DB'] = 'proyecto_gc'
+app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
+app.config['MYSQL_USER'] = os.environ.get('proyecto_gc')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('proyecto_gc')
+
 mysql = MySQL(app)
 
 login_manager = LoginManager()
