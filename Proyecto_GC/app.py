@@ -11,9 +11,10 @@ app.secret_key = "tu_clave_secreta"
 
 # Configuración MySQL
 app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST')
-app.config['MYSQL_USER'] = os.environ.get('proyecto_gc')
+app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('proyecto_gc')
+
 
 mysql = MySQL(app)
 
